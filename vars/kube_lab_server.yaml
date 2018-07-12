@@ -1,0 +1,22 @@
+local_user: shparker
+iso_dir: /isos
+epel_repo_url: https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+vagrant_url: https://releases.hashicorp.com/vagrant/1.9.6/vagrant_1.9.6_x86_64.rpm
+ubuntu_iso_url: http://releases.ubuntu.com/releases/18.04/ubuntu-18.04-live-server-amd64.iso
+nfs_exports:
+  - name: dns_container
+    path: /exports/dns_container
+    unix_perms: "1777"
+    nfs_perms: (rw)
+  - name: database01
+    path: /exports/database01
+    unix_perms: "1777"
+    nfs_perms: (rw)
+vbox_host_only_net: vboxnet11
+vbox_host_only_ip: 192.168.77.1
+vagrant_network_configs:
+  - name: public_network
+  - name: private_network
+    ip: 192.168.77.10
+    netmask: 24
+    gateway: 192.168.77.1
