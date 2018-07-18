@@ -1,0 +1,36 @@
+---
+
+- name: Configure localhost for kubernetes lab
+  hosts: 127.0.0.1
+  connection: local
+  ignore_errors: yes
+  become: yes
+  vars_files: 
+    - "{{ playbook_dir }}/../vars/kube_lab_server.yaml"
+  tasks:
+
+  # Rewrite with idempotency
+  #- name: Rebuild kernel modules for Virtualbox
+  #  command: /usr/lib/virtualbox/vboxdrv.sh setup
+    
+  # Rewrite with idempotency
+  #- name: add user to group
+  #  command: "usermod -a -G vboxusers {{ local_user }}"
+  - name: Find current defined hostonlyifs
+    command: vboxmanage list hostonlyifs
+    register: hostonlyifs
+  - name: Create virtualbox host only adapter
+    command: "vboxmanage hostonlyif create"
+    when: "{{ vbox_host_only_ip }} not in hostonlyifs.stdout"
+    register: vbox_host_only_net_output
+  - set_fact:
+      vbox_host_only_net: "{{ vbox_host_only_net_output.stdout | regex_search('value=\vboxnet\\d{1,2}','\\1')"
+  - debug:
+      msg: "{{ vbox_host_only_net }}"
+    
+#  - name: Configure host only adapter
+#    command: " ipconfig {{ vbox_host_only_net }} --ip {{ vbox_host_only_ip }}"
+
+# Copy vagrant file to location
+# CWD to location
+# Run Vagrant up
